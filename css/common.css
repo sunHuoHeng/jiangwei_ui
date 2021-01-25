@@ -2,61 +2,82 @@
 .fl {
     float: left;
 }
+
 .fr {
     float: right;
 }
+
 /*版心*/
 .w {
     width: 1100px;
     margin: 0 auto;
 }
-.angle{
+
+/*顶部快捷导航栏start*/
+.angle {
     font-size: 18px;
     margin-left: 5px;
+    margin-bottom: 0px;
 }
-.shortcut{
+
+.shortcut {
     height: 30px;
     box-shadow: rgba(0, 0, 0, 0.3) 0 1px;
     line-height: 30px;
 }
-.shortcut li{
+
+.shortcut li {
     float: left;
 }
-.loginAndSign{
+
+.loginAndSign {
     color: #ff0000;
     margin-right: 7px;
     margin-left: 6px;
 }
-.loginAndSign:hover{
+
+.loginAndSign:hover {
     color: #0000ff;
 }
-.shortcut-li li{
+
+.shortcut-li li {
     margin-left: 15px;
 }
-.space-line{
-    color:#666666;
+
+.space-line {
+    color: #666666;
 }
-.header{
+
+.hasLiIcon:hover {
+    color: #e33333;
+}
+
+/*顶部快捷导航栏end*/
+/*header制作start*/
+.header {
     position: relative;
     margin-top: 10px;
     box-shadow: rgba(0, 0, 0, 0.3) 0 1px;
     height: 120px;
 }
-.logo{
+
+.logo {
     position: absolute;
     left: 10px;
     top: 10px;
 
 }
-.logo img{
+
+.logo img {
     height: 100px;
 }
 
-.searchLabel{
+.searchLabel {
     position: absolute;
     left: 400px;
     top: 50px;
 }
+
 .searchLabel input {
     border: 2px solid #c5464a;
     border-radius: 5px;
@@ -64,9 +85,10 @@
     right: 0;
     width: 300px;
     height: 30px;
-    font-size:18px;
+    font-size: 18px;
     outline: none;
 }
+
 .searchLabel button {
     background: #c5464a;
     border-radius: 5px 5px 5px 5px;
@@ -76,22 +98,75 @@
     right: 0;
     outline: none;
 }
+
 .searchLabel button:before {
     content: "搜索";
     font-size: 18px;
     color: #F9F0DA;
 }
-.toShopCar{
+
+.toShopCar {
     position: absolute;
     right: 30px;
-    top: 45px;
-    height: 40px;
-    width: 100px;
-    border: 1px solid #c5464a;
+    top: 35px;
+    height: 50px;
+    width: 120px;
+    border: 1px solid #adb1b1;
+    background-color: #e2e1e1;
+    color: #473f3f;
     text-align: center;
-    line-height: 40px;
+    line-height: 50px;
+    font-size: 16px;
 }
-.toShopCar:hover{
-    color:#fff;
+
+.toShopCar:hover {
+    color: #fff;
     background-color: #c5464a;
 }
+
+/*header制作end*/
+/*nav制作start*/
+.nav {
+    font-size: 20px;
+    font-weight: 800;
+    color: #000;
+}
+
+.navList {
+    height: 50px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0 1px;
+    line-height: 50px;
+    position: relative;
+    text-align: center;
+    /*overflow: hidden;*/
+}
+
+.navList > li {
+    float: left;
+    padding: 0 1%;
+    width: 18%;
+    left: 50%;
+}
+
+.navList > li:first-child {
+    background-color: #c5464a;
+    color: #fff;
+}
+
+.navList > li:hover {
+    background-color: #c5464a;
+    color: #fff;
+}
+
+/*nav制作end*/
+/*center start*/
+.goodsList > a {
+    display: block;
+    float: left;
+    width: 19%;
+    height: 260px;
+    background-color: #c5464a;
+    margin: 5px .5%
+}
+
+/*center end*/
