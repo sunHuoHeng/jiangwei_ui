@@ -97,12 +97,14 @@
     top: 0;
     right: 0;
     outline: none;
+    box-shadow: #666 0px 0px 1px;
 }
 
 .searchLabel button:before {
     content: "搜索";
     font-size: 18px;
     color: #F9F0DA;
+    font-family: "宋体", "Heiti SC", tahoma, arial, "Hiragino Sans GB", "\\5B8B体", sans-serif;
 }
 
 .toShopCar {
@@ -141,32 +143,56 @@
     /*overflow: hidden;*/
 }
 
-.navList > li {
+.navList >li {
     float: left;
     padding: 0 1%;
     width: 18%;
     left: 50%;
 }
 
-.navList > li:first-child {
-    background-color: #c5464a;
-    color: #fff;
-}
 
-.navList > li:hover {
+.tag-hover {
     background-color: #c5464a;
     color: #fff;
 }
 
 /*nav制作end*/
 /*center start*/
-.goodsList > a {
+.goodsList>a {
     display: block;
     float: left;
     width: 19%;
-    height: 260px;
-    background-color: #c5464a;
-    margin: 5px .5%
+    height: 290px;
+    margin: 5px .5%;
+    box-shadow: #666 0px 0px 1px;
+}
+
+.goodsList > a:hover{
+    box-shadow: #c5464a 0px 0px 10px;
+}
+.goodsList > a > span{
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0px 12px;
+    color: #9b9b9b;
+}
+.goodsList-nav img {
+    height: 180px;
+    width: 180px;
+    margin: 10px 0px;
+    background-color: #473f3f;
+    vertical-align: middle;
+}
+.goodsList .price{
+    color: #d81e06;
+    font-size: 24px; 
+    vertical-align: text-bottom;
+}
+.goodsList .storeName{
+    margin-left: 10px;
+    margin-top: 3px;
+    font-size: 12px;
+    color: #9b9b9b;
 }
 
 /*center end*/

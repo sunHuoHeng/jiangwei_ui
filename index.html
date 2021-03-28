@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <title>疆味 - 搬运最地道的新疆味道！</title>
-    <meta name="description" content="疆味有限责任公司致力利用现代科技与传统农业种植相结合,通过采用原产地—线上订购—线下体验店—消费者的方式,打造上联生产、中联平台、下联市场的新零售模式，让消费者可以在线上平台提供的商品里面挑选最合适的商品。"/>
+    <meta name="description"
+        content="疆味有限责任公司致力利用现代科技与传统农业种植相结合,通过采用原产地—线上订购—线下体验店—消费者的方式,打造上联生产、中联平台、下联市场的新零售模式，让消费者可以在线上平台提供的商品里面挑选最合适的商品。" />
     <meta name="keywords" content="疆味,新疆味道,水果,干果,葡萄,哈密瓜">
     <!-- 引入图标 -->
     <link rel="shortcut icon" href="jiangwei.ico">
@@ -11,87 +13,215 @@
     <link rel="stylesheet" href="./css/common.css">
     <link rel="stylesheet" href="./fonts/fbs/css/all.min.css">
     <script src="./fonts/fbs/js/all.min.js"></script>
+    <script src="./js/vue.js"></script>
 </head>
+
 <body>
-    <!-- 顶部快捷导航栏start -->
-    <div class="shortcut">
-        <div class="w">
-            <div class="fl">
-                <ul>
-                    <li>疆味欢迎您！</li>
-                    <li>
-                        <a href="#" class="loginAndSign">登录</a>
-                        <a href="#" class="loginAndSign">注册</a>
+    <div id="app">
+        <!-- 顶部快捷导航栏start -->
+        <div class="shortcut">
+            <div class="w">
+                <div class="fl">
+                    <ul>
+                        <li>疆味欢迎您！</li>
+                        <li>
+                            <a href="#" class="loginAndSign">登录</a>
+                            <a href="#" class="loginAndSign">注册</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="fr">
+                    <ul class="shortcut-li">
+                        <li><a href="#">我的订单</a></li>
+                        <li class="space-line">|</li>
+                        <li><a href="#">我的收藏</a></li>
+                        <li class="space-line">|</li>
+                        <li><a href="#">个人中心</a></li>
+                        <li class="space-line">|</li>
+                        <li><a href="#">联系客服</a></li>
+                        <li class="space-line">|</li>
+                        <li class="hasLiIcon"><a href="#">相关网站</a><i class="fa fa-angle-down angle"
+                                style="margin: 0px 4px -2px 6px"></i></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- 顶部快捷导航栏end -->
+        <!-- header制作start -->
+        <div class="header w">
+            <div class="logo">
+                <img src="./img/logo.png" alt="">
+            </div>
+            <div class="searchLabel">
+                <form action="">
+                    <label>
+                        <input type="text" placeholder="" />
+                    </label>
+                    <button type="text"></button>
+                </form>
+            </div>
+            <div class="toShopCar">
+                <i class="fa fa-shopping-cart fa-lg"></i>
+                购物车
+                <i class="fa fa-angle-right angle fa-lg"></i>
+            </div>
+        </div>
+        <!-- header制作end -->
+        <!-- nav制作start -->
+        <div class="nav">
+            <div class="w">
+                <ul class="navList">
+                    <li v-for="(tab, index) in tabClass" :class="{'tag-hover' : tab.flag}" :key="index"
+                        @click="switchPage(index)">
+                        {{tab.name}}
                     </li>
                 </ul>
             </div>
-            <div class="fr">
-                <ul class="shortcut-li">
-                    <li><a href="#">我的订单</a></li>
-                    <li class="space-line">|</li>
-                    <li><a href="#">我的收藏</a></li>
-                    <li class="space-line">|</li>
-                    <li><a href="#">个人中心</a></li>
-                    <li class="space-line">|</li>
-                    <li><a href="#">联系客服</a></li>
-                    <li class="space-line">|</li>
-                    <li class="hasLiIcon"><a href="#">相关网站</a><i class="fa fa-angle-down angle"
-                                                                 style="margin: 0px 4px -2px 6px"></i></li>
-                </ul>
-            </div>
         </div>
-    </div>
-    <!-- 顶部快捷导航栏end -->
-    <!-- header制作start -->
-    <div class="header w">
-        <div class="logo">
-            <img src="./img/logo.png" alt="">
-        </div>
-        <div class="searchLabel">
-            <form action="">
-                <label>
-                    <input type="text" placeholder=""/>
-                </label>
-                <button type="submit"></button>
-            </form>
-        </div>
-        <div class="toShopCar">
-            <i class="fa fa-shopping-cart fa-lg"></i>
-            购物车
-            <i class="fa fa-angle-right angle fa-lg"></i>
-        </div>
-    </div>
-    <!-- header制作end -->
-    <!-- nav制作start -->
-    <div class="nav">
-        <div class="w">
-            <ul class="navList">
-                <li>爆款热卖</li>
-                <li>分类</li>
-                <li>新品推荐</li>
-                <li>畅享折扣</li>
-                <li>优质专卖</li>
+        <!-- nav制作end -->
+        <!-- center -->
+        <!-- 0 -->
+        <div class="w" v-if="tabId == '0'">
+            <ul class="goodsList">
+                <a href="#" v-for="(good,index) in goods" :key="index">
+                    <div class="goodsList-nav" align="center">
+                        <img src="./img/1.jpg" alt="疆味水果">
+                    </div>
+                    <span>{{good.spuTitle}}</span>
+                    <span class="price">
+                        <img src="./fonts/金额.svg" width="18px" alt="">
+                        <label style="margin: 0px 0px;">{{good.minPrice == null ? 0 : good.minPrice}}</label>
+                        <label style="font-size: 12px;">起</label>
+                    </span>
+                    <div class="storeName">
+                        <img src="./fonts/店铺.svg" width="14px" alt="">
+                        阳光之家
+                    </div>
+                </a>
             </ul>
         </div>
-    </div>
-    <!-- nav制作end -->
-    <!-- center -->
-    <div class="w">
-        <ul class="goodsList">
-            <a href="#"></a>
-            <a href="#"></a>
-            <a href="#"></a>
-            <a href="#"></a>
-            <a href="#"></a>
-            <a href="#"></a>
-            <a href="#"></a>
-        </ul>
-    </div>
-    <!-- center end-->
-    <!-- boot start-->
-    <div class="footer">
+        <!-- 1 -->
+        <div class="w" v-if="tabId == '1'">
+            1
+        </div>
+        <!-- 2 -->
+        <div class="w" v-if="tabId == '2'">
+            2
+        </div>
+        <!-- 3 -->
+        <div class="w" v-if="tabId == '3'">
+            3
+        </div>
+        <!-- 4 -->
+        <div class="w" v-if="tabId == '4'">
+            4
+        </div>
+        <!-- center end-->
+        <!-- boot start-->
+        <div class=" footer">
 
+        </div>
+        <!-- boot end-->
     </div>
-    <!-- boot end-->
+
 </body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            // 根据tabId判断显示那个页面
+            tabId: "0",
+            tabClass: [],
+            goods: [
+                {
+                    'spuId': 1,
+                    'spuTitle': '新疆特产优质杏仁1',
+                    'spuSbuTitle': '5斤30元七折优惠',
+                    'catagoryId': 1,
+                    'storeId': 22222222,
+                    'spuSaleable': 2300,
+                    'spuValid': true,
+                    'minPrice': 400.3
+                },
+                {
+                    'spuId': 2,
+                    'spuTitle': '新疆特产优质杏仁2',
+                    'spuSbuTitle': '5斤30元七折优惠',
+                    'catagoryId': 1,
+                    'storeId': 22222222,
+                    'spuSaleable': 2300,
+                    'spuValid': true,
+                    'minPrice': 43.5
+                },
+                {
+                    'spuId': 3,
+                    'spuTitle': '新疆特产优质杏仁3',
+                    'spuSbuTitle': '5斤30元七折优惠',
+                    'catagoryId': 1,
+                    'storeId': 22222222,
+                    'spuSaleable': 2300,
+                    'spuValid': true,
+                    'minPrice': 50
+                },
+                {
+                    'spuId': 4,
+                    'spuTitle': '新疆特产优质杏仁4',
+                    'spuSbuTitle': '5斤30元七折优惠',
+                    'catagoryId': 1,
+                    'storeId': 22222222,
+                    'spuSaleable': 2300,
+                    'spuValid': true,
+                    'minPrice': 40100
+                },
+                {
+                    'spuId': 5,
+                    'spuTitle': '新疆特产优质杏仁5',
+                    'spuSbuTitle': '5斤30元七折优惠',
+                    'catagoryId': 1,
+                    'storeId': 22222222,
+                    'spuSaleable': 2300,
+                    'spuValid': true,
+                    'minPrice': 10000
+                },
+                {
+                    'spuId': 6,
+                    'spuTitle': '新疆特产优质杏仁6',
+                    'spuSbuTitle': '5斤30元七折优惠',
+                    'catagoryId': 1,
+                    'storeId': 22222222,
+                    'spuSaleable': 2300,
+                    'spuValid': true
+                }
+            ]
+        },
+        created() {
+            this.initTags();
+            this.tabClass[0].name = "爆款热卖";
+            this.tabClass[1].name = "分类";
+            this.tabClass[2].name = "新品推荐";
+            this.tabClass[3].name = "畅享折扣";
+            this.tabClass[4].name = "优质专卖";
+        },
+        methods: {
+            initTags() {
+                //一共有5个tag
+                const tagNum = 4;
+                for (let i = 0; i < tagNum; i++) {
+                    if (i == this.tabId) {
+                        this.tabClass.push({ flag: true });
+                    }
+                    this.tabClass.push({ flag: false });
+                }
+            },
+            switchPage(index) {
+                this.tabClass.forEach(tab => {
+                    tab.flag = false;
+                });
+                this.tabId = index;
+                this.tabClass[this.tabId].flag = true;
+            }
+        }
+    })
+</script>
+
 </html>
