@@ -1,0 +1,133 @@
+.goodShow{
+    box-shadow: rgba(0, 0, 0, 0.3) 0 1px;
+    height: 450px;
+}
+#categoryShow {
+    font-size: 14px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: rgb(167, 167, 164);
+    box-shadow: rgba(0, 0, 0, 0.3) 0 1px;
+    padding: 9px 0px;
+    margin-top: 2px;
+    display: block;
+}
+
+#storeShow {
+    width: 1100px;
+    display: inline-block;
+    box-shadow: rgba(0, 0, 0, 0.3) 0 1px;
+    margin: 20px 0px;
+}
+
+#storeShow img {
+    width: 100px;
+    height: 100px;
+    float: left;
+    padding-right: 50px;
+    box-shadow: rgba(0, 0, 0, 0.3) 1px 0 0 0;
+    margin-bottom: 20px;
+}
+
+#storeShow #storeName {
+    margin-left: 20px;
+    margin-bottom: 15px;
+    display: inline-block;
+    color: #c5464a;
+    letter-spacing: 20px;
+    font-size: 30px;
+}
+
+#storeShow #storeDes {
+    padding: 0px 20px;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: #666;
+}
+
+#skuImgDiv {
+    width: 300px;
+    height: 300px;
+    float: left;
+    padding: 20px;
+    padding-bottom: 80px;
+    box-shadow: #666 0px 0px 1px;
+    margin-right: 150px;
+}
+
+.skuImg {
+    height: 300px;
+    width: 300px;
+}
+
+#skuDetail{
+    float: left;
+}
+
+#spuTitle{
+    font-size: 30px;
+    margin-bottom: 10px;
+    letter-spacing: 3px;
+}
+#spuSubTitle{
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #666;
+}
+#skuPrice {
+    margin-bottom: 20px;
+    font-size: 25px;
+    color: #d81e06;
+}
+
+.spec{
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+.spec  .text{
+    
+    display: inline-block;
+    width: 100px;
+}
+
+.select{
+    color: #409EFF;
+    border: 1px #409EFF solid;
+}
+.num{
+    margin-bottom: 25px;
+    margin-top: 10px;
+}
+
+#specDetailHead{
+    height: 40px;
+    background-color: #c5464a;
+    line-height: 40px;
+    padding-left: 10px;
+    font-size: 17px;
+    font-weight: 600;
+}
+#specDetailItem{
+    font-size: 16px;
+    font-weight: 400;
+    padding-left: 150px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+#specDetailItem span{
+    margin: 5px 0;
+    width: 450px;
+    display: inline-block;
+}
+.spuDescription{
+    text-align: left;
+    margin: 0 auto;
+    margin-top: 20px;
+    width: 600px;
+}
+.spuDescription img{
+    width: 600px;
+    height: 600px;
+    margin: 5px;
+}

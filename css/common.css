@@ -57,7 +57,7 @@
 .header {
     position: relative;
     margin-top: 10px;
-    box-shadow: rgba(0, 0, 0, 0.3) 0 1px;
+    box-shadow: #6b66664d 0 1px;
     height: 120px;
 }
 
@@ -132,6 +132,8 @@
     font-size: 20px;
     font-weight: 800;
     color: #000;
+    margin-bottom: 100px;
+    min-height: 1500px;
 }
 
 .navList {
@@ -162,7 +164,7 @@
     display: block;
     float: left;
     width: 19%;
-    height: 290px;
+    height: 320px;
     margin: 5px .5%;
     box-shadow: #666 0px 0px 1px;
 }
@@ -170,7 +172,7 @@
 .goodsList > a:hover{
     box-shadow: #c5464a 0px 0px 10px;
 }
-.goodsList > a > span{
+.goodsList > a span{
     font-size: 18px;
     font-weight: 500;
     margin: 0px 12px;
@@ -196,3 +198,39 @@
 }
 
 /*center end*/
+/*footer*/
+.footer{
+    font-size: 20px;
+    font-weight: 800;
+    color: #000;
+    height: 100px;
+    margin-top: -1px;
+}
+.footer-column-t{
+    display: flex;
+    color: rgba(0, 0, 0, 0.75);
+    flex-wrap: wrap;
+    font-size: 16px;
+    font-weight: 400;
+    font-variant-ligatures: common-ligatures;
+    justify-content: center;
+    list-style-position: outside;
+    tab-size: 4;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+}
+.footer-column-t li{
+    margin: 0px 4px;
+}
+.footer-column-b{
+    display: flex;
+    color: rgba(0, 0, 0, 0.75);
+    flex-wrap: wrap;
+    font-size: 14px;
+    font-weight: 400;
+    justify-content: center;
+}
+.footer-column-b li{
+    margin: 0px 4px;
+}
+/*footer*/

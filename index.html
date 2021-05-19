@@ -14,58 +14,20 @@
     <link rel="stylesheet" href="./fonts/fbs/css/all.min.css">
     <script src="./fonts/fbs/js/all.min.js"></script>
     <script src="./js/vue.js"></script>
+    <script src="./js/axios.min.js"></script>
+    <script src="./js/public/top.js"></script>
+    <script src="./js/public/header.js"></script>
+    <script src="./js/public/footer.js"></script>
+    <script src="./js/util/static.js"></script>
 </head>
 
 <body>
     <div id="app">
         <!-- 顶部快捷导航栏start -->
-        <div class="shortcut">
-            <div class="w">
-                <div class="fl">
-                    <ul>
-                        <li>疆味欢迎您！</li>
-                        <li>
-                            <a href="#" class="loginAndSign">登录</a>
-                            <a href="#" class="loginAndSign">注册</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="fr">
-                    <ul class="shortcut-li">
-                        <li><a href="#">我的订单</a></li>
-                        <li class="space-line">|</li>
-                        <li><a href="#">我的收藏</a></li>
-                        <li class="space-line">|</li>
-                        <li><a href="#">个人中心</a></li>
-                        <li class="space-line">|</li>
-                        <li><a href="#">联系客服</a></li>
-                        <li class="space-line">|</li>
-                        <li class="hasLiIcon"><a href="#">相关网站</a><i class="fa fa-angle-down angle"
-                                style="margin: 0px 4px -2px 6px"></i></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+        <jiangwei-top></jiangwei-top>
         <!-- 顶部快捷导航栏end -->
         <!-- header制作start -->
-        <div class="header w">
-            <div class="logo">
-                <img src="./img/logo.png" alt="">
-            </div>
-            <div class="searchLabel">
-                <form action="">
-                    <label>
-                        <input type="text" placeholder="" />
-                    </label>
-                    <button type="text"></button>
-                </form>
-            </div>
-            <div class="toShopCar">
-                <i class="fa fa-shopping-cart fa-lg"></i>
-                购物车
-                <i class="fa fa-angle-right angle fa-lg"></i>
-            </div>
-        </div>
+        <jiangwei-header @func="search"></jiangwei-header>
         <!-- header制作end -->
         <!-- nav制作start -->
         <div class="nav">
@@ -77,121 +39,71 @@
                     </li>
                 </ul>
             </div>
+            <!-- 0 -->
+            <div class="w" v-if="tabId == '0'">
+                <ul class="goodsList">
+                    <a @click="spuDetail(good.spuId)" v-for="(good,index) in goods" :key="index">
+                        <div class="goodsList-nav" align="center">
+                            <img :src="good.imageUrl" alt="疆味水果">
+                        </div>
+                        <div>
+                            <span>{{good.spuTitle}}</span>
+                        </div>
+                        <div>
+                            <span 
+                                style="font-size: 12px;"
+                            >{{good.spuSubTitle | filterSubTitle}}</span>
+                        </div>
+                        <div>
+                            <span class="price">
+                                <img src="./fonts/金额.svg" width="18px" alt="">
+                                <label style="margin: 0px 0px;">{{good.minPrice == null ? 0 : good.minPrice / 100}}</label>
+                                <label style="font-size: 12px;">起</label>
+                            </span>
+                        </div>
+                        <div class="storeName">
+                            <img src="./fonts/店铺.svg" width="14px" alt="">
+                            {{good.storeName}}
+                        </div>
+                    </a>
+                </ul>
+            </div>
+            <!-- 1 -->
+            <div class="w" v-if="tabId == '1'">
+                1
+            </div>
+            <!-- 2 -->
+            <div class="w" v-if="tabId == '2'">
+                2
+            </div>
+            <!-- 3 -->
+            <div class="w" v-if="tabId == '3'">
+                3
+            </div>
+            <!-- 4 -->
+            <div class="w" v-if="tabId == '4'">
+                4
+            </div>
+            <!-- center end-->
         </div>
         <!-- nav制作end -->
-        <!-- center -->
-        <!-- 0 -->
-        <div class="w" v-if="tabId == '0'">
-            <ul class="goodsList">
-                <a href="#" v-for="(good,index) in goods" :key="index">
-                    <div class="goodsList-nav" align="center">
-                        <img src="./img/1.jpg" alt="疆味水果">
-                    </div>
-                    <span>{{good.spuTitle}}</span>
-                    <span class="price">
-                        <img src="./fonts/金额.svg" width="18px" alt="">
-                        <label style="margin: 0px 0px;">{{good.minPrice == null ? 0 : good.minPrice}}</label>
-                        <label style="font-size: 12px;">起</label>
-                    </span>
-                    <div class="storeName">
-                        <img src="./fonts/店铺.svg" width="14px" alt="">
-                        阳光之家
-                    </div>
-                </a>
-            </ul>
-        </div>
-        <!-- 1 -->
-        <div class="w" v-if="tabId == '1'">
-            1
-        </div>
-        <!-- 2 -->
-        <div class="w" v-if="tabId == '2'">
-            2
-        </div>
-        <!-- 3 -->
-        <div class="w" v-if="tabId == '3'">
-            3
-        </div>
-        <!-- 4 -->
-        <div class="w" v-if="tabId == '4'">
-            4
-        </div>
-        <!-- center end-->
-        <!-- boot start-->
-        <div class=" footer">
 
-        </div>
-        <!-- boot end-->
+        <!-- foot start-->
+        <jiangwei-footer></jiangwei-footer>
+        <!-- foot end-->
     </div>
-
 </body>
 <script>
     var app = new Vue({
         el: '#app',
         data: {
+            // 引入全局变量
             // 根据tabId判断显示那个页面
             tabId: "0",
             tabClass: [],
+            searchWord:'',
             goods: [
-                {
-                    'spuId': 1,
-                    'spuTitle': '新疆特产优质杏仁1',
-                    'spuSbuTitle': '5斤30元七折优惠',
-                    'catagoryId': 1,
-                    'storeId': 22222222,
-                    'spuSaleable': 2300,
-                    'spuValid': true,
-                    'minPrice': 400.3
-                },
-                {
-                    'spuId': 2,
-                    'spuTitle': '新疆特产优质杏仁2',
-                    'spuSbuTitle': '5斤30元七折优惠',
-                    'catagoryId': 1,
-                    'storeId': 22222222,
-                    'spuSaleable': 2300,
-                    'spuValid': true,
-                    'minPrice': 43.5
-                },
-                {
-                    'spuId': 3,
-                    'spuTitle': '新疆特产优质杏仁3',
-                    'spuSbuTitle': '5斤30元七折优惠',
-                    'catagoryId': 1,
-                    'storeId': 22222222,
-                    'spuSaleable': 2300,
-                    'spuValid': true,
-                    'minPrice': 50
-                },
-                {
-                    'spuId': 4,
-                    'spuTitle': '新疆特产优质杏仁4',
-                    'spuSbuTitle': '5斤30元七折优惠',
-                    'catagoryId': 1,
-                    'storeId': 22222222,
-                    'spuSaleable': 2300,
-                    'spuValid': true,
-                    'minPrice': 40100
-                },
-                {
-                    'spuId': 5,
-                    'spuTitle': '新疆特产优质杏仁5',
-                    'spuSbuTitle': '5斤30元七折优惠',
-                    'catagoryId': 1,
-                    'storeId': 22222222,
-                    'spuSaleable': 2300,
-                    'spuValid': true,
-                    'minPrice': 10000
-                },
-                {
-                    'spuId': 6,
-                    'spuTitle': '新疆特产优质杏仁6',
-                    'spuSbuTitle': '5斤30元七折优惠',
-                    'catagoryId': 1,
-                    'storeId': 22222222,
-                    'spuSaleable': 2300,
-                    'spuValid': true
-                }
+
             ]
         },
         created() {
@@ -201,8 +113,17 @@
             this.tabClass[2].name = "新品推荐";
             this.tabClass[3].name = "畅享折扣";
             this.tabClass[4].name = "优质专卖";
+            this.getSpus();
         },
         methods: {
+            getSpus() {
+                let _this = this;
+                var data = {};
+                data.searchText = "";
+                $http.post("jw-spu/es/list",data).then((response) => {
+                    _this.goods = response.data.result;
+                });
+            },
             initTags() {
                 //一共有5个tag
                 const tagNum = 4;
@@ -219,9 +140,25 @@
                 });
                 this.tabId = index;
                 this.tabClass[this.tabId].flag = true;
+            },
+            spuDetail(spuId){
+                window.location = 'item.html?id=' + encodeURI(spuId);
+            },
+            search(data){
+                this.searchWord = data;
+                window.location = 'showList.html?search='+encodeURI(data);
+            }
+        },
+        filters: {
+            filterSubTitle(val){
+                let len = 12;
+                if (val.length > len) {
+                    let v = val.substring(0,len);
+                    return v + "..."; 
+                }
+                return val;
             }
         }
     })
 </script>
-
 </html>

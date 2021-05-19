@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>疆味 - 搬运最地道的新疆味道！</title>
+    <meta name="description"
+        content="疆味有限责任公司致力利用现代科技与传统农业种植相结合,通过采用原产地—线上订购—线下体验店—消费者的方式,打造上联生产、中联平台、下联市场的新零售模式，让消费者可以在线上平台提供的商品里面挑选最合适的商品。" />
+    <meta name="keywords" content="疆味,新疆味道,水果,干果,葡萄,哈密瓜">
+    <!-- 引入图标 -->
+    <link rel="shortcut icon" href="jiangwei.ico">
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./fonts/fbs/css/all.min.css">
+    <script src="./fonts/fbs/js/all.min.js"></script>
+    <script src="./js/vue.js"></script>
+    <script src="./js/axios.min.js"></script>
+    <script src="./js/public/top.js"></script>
+    <script src="./js/public/header.js"></script>
+    <script src="./js/public/footer.js"></script>
+    <script src="./js/util/static.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 顶部快捷导航栏start -->
+        <jiangwei-top></jiangwei-top>
+        <!-- 顶部快捷导航栏end -->
+        <!-- header制作start -->
+        <jiangwei-header @func="search" :searchText="searchWord"></jiangwei-header>
+        <!-- header制作end -->
+        <!-- nav制作start -->
+        <div class="nav">
+            <ul class="goodsList w">
+                <a @click="spuDetail(good.spuId)" v-for="(good,index) in goods" :key="index">
+                    <div class="goodsList-nav" align="center">
+                        <img :src="good.imageUrl" alt="疆味水果">
+                    </div>
+                    <div>
+                        <span>{{good.spuTitle}}</span>
+                    </div>
+                    <div>
+                        <span 
+                            style="font-size: 12px;"
+                        >{{good.spuSubTitle | filterSubTitle}}</span>
+                    </div>
+                    <div>
+                        <span class="price">
+                            <img src="./fonts/金额.svg" width="18px" alt="">
+                            <label style="margin: 0px 0px;">{{good.minPrice == null ? 0 : good.minPrice / 100}}</label>
+                            <label style="font-size: 12px;">起</label>
+                        </span>
+                    </div>
+                    <div class="storeName">
+                        <img src="./fonts/店铺.svg" width="14px" alt="">
+                        {{good.storeName}}
+                    </div>
+                </a>
+            </ul>
+        </div>
+        <!-- nav制作end -->
+
+        <!-- foot start-->
+        <jiangwei-footer></jiangwei-footer>
+        <!-- foot end-->
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            // 引入全局变量
+            // 根据tabId判断显示那个页面
+            tabId: "0",
+            goods: [
+            ],
+            searchWord:''
+        },
+        created() {
+            this.getSpus();
+        },
+        methods: {
+            getSpus() {
+                let _this = this;
+                var search = decodeURI(getUrlParam('search'));
+                this.searchWord = search;
+                let data = {};
+                data.searchText = search;
+                $http.post("jw-spu/es/list", data).then((response) => {
+                    _this.goods = response.data.result;
+                });
+            },
+            search(data) {
+                window.location = 'showList.html?search=' + encodeURI(data);
+            },
+            spuDetail(spuId){
+                window.location = 'item.html?id=' + encodeURI(spuId);
+            }
+        },
+        filters: {
+            filterSubTitle(val){
+                let len = 15;
+                if (val.length > len) {
+                    let v = val.substring(0,len);
+                    return v + "..."; 
+                }
+                return val;
+            }
+        }
+    })
+</script>
+
+</html>

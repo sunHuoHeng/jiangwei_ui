@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>疆味 - 搬运最地道的新疆味道！</title>
+    <meta name="description"
+        content="疆味有限责任公司致力利用现代科技与传统农业种植相结合,通过采用原产地—线上订购—线下体验店—消费者的方式,打造上联生产、中联平台、下联市场的新零售模式，让消费者可以在线上平台提供的商品里面挑选最合适的商品。" />
+    <meta name="keywords" content="疆味,新疆味道,水果,干果,葡萄,哈密瓜">
+    <!-- 引入图标 -->
+    <link rel="shortcut icon" href="jiangwei.ico">
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./element/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/item.css">
+    <link rel="stylesheet" href="./fonts/fbs/css/all.min.css">
+    <script src="./fonts/fbs/js/all.min.js"></script>
+    <script src="./js/vue.js"></script>
+    <script src="./element/element-ui/lib/index.js"></script>
+    <script src="./js/axios.min.js"></script>
+    <script src="./js/public/top.js"></script>
+    <script src="./js/public/header.js"></script>
+    <script src="./js/public/footer.js"></script>
+    <script src="./js/util/static.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 顶部快捷导航栏start -->
+        <jiangwei-top></jiangwei-top>
+        <!-- 顶部快捷导航栏end -->
+        <!-- header制作start -->
+        <jiangwei-header @func="search" :searchText="searchWord"></jiangwei-header>
+        <!-- header制作end -->
+        <!-- nav制作start -->
+        <div class="nav w">
+            <div>
+                <span id="categoryShow">分类&nbsp;&gt;&nbsp;<a
+                        @click="search(spu.category.categoryName)">{{spu.category.categoryName}}</a></span>
+            </div>
+            <div id="storeShow">
+                <img :src="spu.store.storeImage" alt="">
+                <span id="storeName">{{spu.store.storeName}}</span><br>
+                <span id="storeDes">{{spu.store.storeDes | desFilter}}</span>
+            </div>
+            <div class="goodShow">
+                <div id="skuImgDiv">
+                    <!-- 左侧显示图片 -->
+                    <template>
+                        <el-carousel indicator-position="outside" :autoplay="false" trigger="click" @change="change">
+                            <el-carousel-item v-for="sku in skus" :key="sku.skuId">
+                                <div>
+                                    <img class="skuImg" :src="sku.skuImages" alt="">
+                                </div>
+                            </el-carousel-item>
+                        </el-carousel>
+                    </template>
+
+                </div>
+                <div id="skuDetail">
+                    <div id="spuTitle">
+                        <span>{{spu.spuTitle}}</span>
+                    </div>
+                    <div id="spuSubTitle">
+                        <span>{{spu.spuSubTitle}}</span>
+                    </div>
+                    <div id="skuPrice">
+                        <span class="price">
+                            <img src="./fonts/金额.svg" width="18px" alt="">
+                            <label style="margin: 0px 0px;">{{skuPrice | skuPriceFilter}}</label>
+                        </span>
+                    </div>
+                    <div>
+                        <div class="spec">
+                            <span class="text">口味：</span>
+                            <el-button :class="selectItem.n10 == item ? 'select' : 'noSelect'"
+                                @click="selectButton('n10',i,spuDetail.spuSpecialSpec.n10)"
+                                v-for="(item,i) in spuDetail.spuSpecialSpec.n10" plain mini :key="i">{{item}}
+                            </el-button>
+                        </div>
+                        <div class="spec">
+                            <span class="text">净含量(克)：</span>
+                            <el-button :class="selectItem.n11 == item ? 'select' : 'noSelect'"
+                                @click="selectButton('n11',i,spuDetail.spuSpecialSpec.n11)"
+                                v-for="(item,i) in spuDetail.spuSpecialSpec.n11" plain mini :key="i">{{item}}
+                            </el-button>
+                        </div>
+                        <div class="spec">
+                            <span class="text">品质等级：</span>
+                            <el-button :class="selectItem.n12 == item ? 'select' : 'noSelect'"
+                                @click="selectButton('n12',i,spuDetail.spuSpecialSpec.n12)"
+                                v-for="(item,i) in spuDetail.spuSpecialSpec.n12" plain mini :key="i">{{item}}
+                            </el-button>
+                        </div>
+                        <div class="spec num">
+                            <span class="text">数量：</span>
+                            <el-input-number @change="numHandleChange" v-model="num" :min="1" :max="10" label="描述文字">
+                            </el-input-number>
+                        </div>
+                        <div>
+                            <el-button mini @click="addToCart" type="warning">加入购物车</el-button>
+                            <el-button mini v-popover:popover type="warning">直接购买</el-button>
+                            <el-popover ref="popover" placement="top" width="160" v-model="visible">
+                                <p>测试支付</p>
+                                <div style="text-align: right; margin: 0">
+                                    <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+                                    <el-button type="primary" size="mini" @click="buy()">确定</el-button>
+                                </div>
+                            </el-popover>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div id="specDetailHead">
+                    <span>商品规格</span>
+                </div>
+                <div id="specDetailItem">
+                    <span>生产许可证编号：{{this.spuDetail.spuGenericSpec.n1}}</span>
+                    <span>产品标准号：{{this.spuDetail.spuGenericSpec.n2}}</span>
+                    <br>
+                    <span>厂名：{{this.spuDetail.spuGenericSpec.n3}}</span>
+                    <span>厂址：{{this.spuDetail.spuGenericSpec.n4}}</span>
+                    <br>
+                    <span>厂家联系方式：{{this.spuDetail.spuGenericSpec.n5}}</span>
+                    <span>储藏方法：{{this.spuDetail.spuGenericSpec.n6}}</span>
+                    <br>
+                    <span>保质期：{{this.spuDetail.spuGenericSpec.n7}}</span>
+                    <span>包装种类：{{this.spuDetail.spuGenericSpec.n8}}</span>
+                    <br>
+                    <span>是否有机食品：{{this.spuDetail.spuGenericSpec.n9}}</span>
+                </div>
+            </div>
+            <div>
+                <div id="specDetailHead">
+                    <span>商品详情</span>
+                </div>
+                <div v-html="this.spuDetail.spuDescription" class="spuDescription">
+
+                </div>
+            </div>
+        </div>
+        <!-- nav制作end -->
+
+        <!-- foot start-->
+        <jiangwei-footer></jiangwei-footer>
+        <!-- foot end-->
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            // 引入全局变量
+            // 根据tabId判断显示那个页面
+            tabId: "0",
+            spu: {},
+            searchWord: '',
+            skus: [],
+            skuIndex: 0,
+            sku: {},
+            spuDetail: {},
+            selectItem: {},
+            num: 1,
+            skuPrice: 0,
+            visible:false
+        },
+        created() {
+            this.getSpuById(decodeURI(getUrlParam('id')));
+        },
+        methods: {
+            getStyle(i) {
+                this.selectItem.n10 == i ? 'color:red' : ''
+            },
+            getSpuById(id) {
+                let data = {};
+                data.id = id;
+                $http.post("jw-spu/detail", data).then((response) => {
+                    this.spu = response.data.result;
+                    this.skus = response.data.result.skus
+                    this.skuIndex = 0;
+                    this.sku = this.skus[this.skuIndex];
+                    this.selectItem = JSON.parse(this.sku.skuOwnSpec);
+                    this.spuDetail = this.spu.spuDetail;
+                    this.spuDetail.spuSpecialSpec = JSON.parse(this.spu.spuDetail.spuSpecialSpec);
+                    this.spuDetail.spuGenericSpec = JSON.parse(this.spu.spuDetail.spuGenericSpec);
+                    this.skuPrice = this.sku.skuPrice;
+                });
+            },
+            search(data) {
+                window.location = 'showList.html?search=' + encodeURI(data);
+            },
+            change(newIndex, oldIndex) {
+                if (newIndex == oldIndex) {
+                    return;
+                }
+                this.skuIndex = newIndex;
+            },
+            selectButton(n, i, val) {
+                if (n == "n10") {
+                    this.selectItem.n10 = val[i];
+                    this.skus.forEach(element => {
+                        if (element.skuOwnSpec == JSON.stringify(this.selectItem)) {
+                            this.sku = element;
+                        }
+                    });
+                }
+                if (n == "n11") {
+                    this.selectItem.n11 = val[i];
+                    this.skus.forEach(element => {
+                        if (element.skuOwnSpec == JSON.stringify(this.selectItem)) {
+                            this.sku = element;
+                        }
+                    });
+                }
+                if (n == "n12") {
+                    this.selectItem.n12 = val[i];
+                    this.skus.forEach(element => {
+                        if (element.skuOwnSpec == JSON.stringify(this.selectItem)) {
+                            this.sku = element;
+                        }
+                    });
+                }
+                this.skuPrice = this.sku.skuPrice * this.num;
+            },
+            numHandleChange() {
+                this.skuPrice = this.sku.skuPrice * this.num;
+            }
+        },
+        filters: {
+            filterSubTitle(val) {
+                let len = 12;
+                if (val.length > len) {
+                    let v = val.substring(0, len);
+                    return v + "...";
+                }
+                return val;
+            },
+            desFilter(val) {
+                if (val == null || val == undefined) {
+                    return "疆味网站下注册店铺，经网站人员核实，疆味担保店铺真实性，保障用户权益，如有问题请联系客服";
+                }
+                return val;
+            },
+            skuPriceFilter(val) {
+                return val / 100;
+            }
+
+        }
+    })
+</script>
+
+</html>
