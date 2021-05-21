@@ -24,10 +24,10 @@
 <body>
     <div id="app">
         <!-- 顶部快捷导航栏start -->
-        <jiangwei-top></jiangwei-top>
+        <jiangwei-top :user="user"></jiangwei-top>
         <!-- 顶部快捷导航栏end -->
         <!-- header制作start -->
-        <jiangwei-header @func="search" :searchText="searchWord"></jiangwei-header>
+        <jiangwei-header @func="search" :searchtext="searchWord"></jiangwei-header>
         <!-- header制作end -->
         <!-- nav制作start -->
         <div class="nav">
@@ -74,9 +74,14 @@
             tabId: "0",
             goods: [
             ],
-            searchWord:''
+            searchWord:'',
+            user:{}
         },
         created() {
+            var user = JSON.parse(sessionStorage.getItem("user"));
+            if (null != user) {
+                this.user = user;
+            }
             this.getSpus();
         },
         methods: {

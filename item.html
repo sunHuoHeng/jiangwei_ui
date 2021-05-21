@@ -27,10 +27,10 @@
 <body>
     <div id="app">
         <!-- 顶部快捷导航栏start -->
-        <jiangwei-top></jiangwei-top>
+        <jiangwei-top :user="user"></jiangwei-top>
         <!-- 顶部快捷导航栏end -->
         <!-- header制作start -->
-        <jiangwei-header @func="search" :searchText="searchWord"></jiangwei-header>
+        <jiangwei-header @func="search" :searchtext="searchWord"></jiangwei-header>
         <!-- header制作end -->
         <!-- nav制作start -->
         <div class="nav w">
@@ -163,9 +163,14 @@
             selectItem: {},
             num: 1,
             skuPrice: 0,
-            visible:false
+            visible:false,
+            user:{}
         },
         created() {
+            var user = JSON.parse(sessionStorage.getItem("user"));
+            if (null != user) {
+                this.user = user;
+            }
             this.getSpuById(decodeURI(getUrlParam('id')));
         },
         methods: {
@@ -225,6 +230,18 @@
             },
             numHandleChange() {
                 this.skuPrice = this.sku.skuPrice * this.num;
+            },
+            addToCart(){
+                var data = {};
+                data.userId = this.user.userId;
+                data.spu = this.spu;
+                data.sku = this.sku;
+                data.count = this.num;
+                $http.post("jw-cart/add", data).then((response) => {
+                    this.$message.success("加入购物车成功！");
+                }).catch((response) => {
+                    this.$message.error("加入购物车失败，购物车已存在同种商品！");
+                });
             }
         },
         filters: {
@@ -243,7 +260,8 @@
                 return val;
             },
             skuPriceFilter(val) {
-                return val / 100;
+                let priceStr = val.toString();
+                return priceStr.slice(0,priceStr.length - 2) + "." + priceStr.slice(priceStr.length - 2);
             }
 
         }

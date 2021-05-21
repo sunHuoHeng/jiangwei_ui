@@ -2,11 +2,15 @@ const jiangweiTop = `
 <div class="shortcut">
             <div class="w">
                 <div class="fl">
-                    <ul>
+                    <ul >
                         <li>疆味欢迎您！</li>
-                        <li>
-                            <a href="#" class="loginAndSign">登录</a>
+                        <li v-if='null == user'>
+                            <a href="#" class="loginAndSign" @click="toLogin">登录</a>
                             <a href="#" class="loginAndSign">注册</a>
+                        </li>
+                        <li v-else>
+                            用户{{user.username}}&nbsp;
+                            <a href="#" class="loginAndSign" @click="toLogout">退出登录</a>
                         </li>
                     </ul>
                 </div>
@@ -34,8 +38,16 @@ var topComponent = Vue.extend({
             msg: 'hello,这是自定义的list组件'
         };
     },   
-    methods: {},       //定义组件的方法
-    props: ['topProps'],  //配置需要传入的属性
+    methods: {
+        toLogin() {
+            window.location = 'login.html';
+        },
+        toLogout() {
+            sessionStorage.setItem("user", null);
+            window.location = 'login.html';
+        }
+    },       //定义组件的方法
+    props: ['user'],  //配置需要传入的属性
 });
 //注册Vue全局组件
 Vue.component("jiangwei-top",topComponent);

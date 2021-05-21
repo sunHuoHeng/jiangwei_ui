@@ -27,50 +27,66 @@
 <body>
     <div id="app">
         <!-- 顶部快捷导航栏start -->
-        <jiangwei-top></jiangwei-top>
+        <jiangwei-top :user="user"></jiangwei-top>
         <!-- 顶部快捷导航栏end -->
         <!-- header制作start -->
-        <jiangwei-header @func="search" :searchText="searchWord"></jiangwei-header>
+        <jiangwei-header @func="search" :searchtext="searchWord"></jiangwei-header>
         <!-- header制作end -->
         <!-- nav制作start -->
         <div class="nav w">
             <div id="cartTitle">
-                <span>全部商品</span>
+                <span>购物车/全部商品</span>
             </div>
             <el-table ref="multipleTable" :data="goods" tooltip-effect="dark" style="width: 100%"
-                >
+                @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50">
                 </el-table-column>
                 <el-table-column label="商品图片" width="150">
                     <template slot-scope="scope">
-                        <img src="scope.row.sku.skuImages" alt="">
+                        <img :src="scope.row.sku.skuImages" alt="" style="width: 100px;height: 100px;">
                     </template>
                 </el-table-column>
-                <el-table-column prop="spu.spuTitle" label="商品名称" width="150">
+                <el-table-column prop="spu.spuTitle" label="商品名称" width="180">
                 </el-table-column>
                 <el-table-column label="商品规格" width="150">
                     <template slot-scope="scope">
-                        <span>ddd</span>
+                        <span style="font-size: 12px;" v-html="filterSkuOwnSpec(scope.row.sku.skuOwnSpec)"></span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="sku.skuPrice" label="单价" width="150">
-                </el-table-column>
-                <el-table-column label="数量" width="150">
+                <el-table-column label="单价" width="150">
                     <template slot-scope="scope">
-                        <span>数量</span>
+                        <span>{{scope.row.sku.skuPrice | skuPriceFilter}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="数量" width="120">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.count}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="小计" width="150">
                     <template slot-scope="scope">
-                        <span>小计</span>
+                        <span
+                            v-text="$options.filters.skuPriceFilter(sum(scope.row.sku.skuPrice,scope.row.count))"></span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="150">
+                <el-table-column label="操作" width="150" style="color: #ff0000;">
                     <template slot-scope="scope">
-                        <span>小计</span>
+                        <el-button type="info" icon="el-icon-delete" @click="deleteCart(scope.row)"></el-button>
                     </template>
                 </el-table-column>
             </el-table>
+            <!--结算窗口开始-->
+            <div class="balance">
+                <ul class="balance_ul1">
+                    <li @click="deleteCart()">清空购物车</li>
+                </ul>
+                <ul class="balance_ul2">
+                    <li>已经选择<span>{{cartNum}}</span>件商品</li>
+                    <li>总价<span>￥{{cartSelctPrice | skuPriceFilter}}</span></li>
+                    <li class="butt">去结算</li>
+                </ul>
+            </div>
+            <!--结算窗口结束-->
         </div>
         <!-- nav制作end -->
 
@@ -84,52 +100,76 @@
         el: '#app',
         data: {
             // 引入全局变量
-            // 根据tabId判断显示那个页面
-            tabId: "0",
             goods: [
-                {
-                    sku: {
-                        "skuId": 25, 
-                        "spuId": 9, 
-                        "skuTitle": null, 
-                        "skuImages": "http://127.0.0.1:9000/sku/25_1621333677355.jpg", 
-                        "skuPrice": 1260, 
-                        "skuIndexes": null, 
-                        "skuOwnSpec": {"n10":"原味","n12":"普通","n11":500},
-                        "skuEnable": true,
-                        "skuCreateTime": "2021-05-18T10:27:57.000+0000", 
-                        "skuLastUpdateTime": "2021-05-18T10:27:57.000+0000", 
-                        "skuStock": 9999
-                    },
-                    spu:{
-                        spuTitle:"测试商品"
-                    },
-                    count: 1,
-                }
             ],
-            searchWord: ''
+            searchWord: '',
+            user: {},
+            cartSelect: [],
+            cartNum: 0,
+            cartSelctPrice: 0
         },
         created() {
-            this.getSpus();
+            var user = JSON.parse(sessionStorage.getItem("user"));
+            if (null != user) {
+                this.user = user;
+            } else {
+                window.location = 'login.html';
+            }
+            this.getCart(user.userId);
         },
         methods: {
-            getSpus() {
+            getCart(id) {
+                $http.post("jw-cart/list", { userId: id }).then((response) => {
+                    this.goods = response.data.result;
+                })
             },
             search(data) {
                 window.location = 'showList.html?search=' + encodeURI(data);
             },
             spuDetail(spuId) {
                 window.location = 'item.html?id=' + encodeURI(spuId);
+            },
+            filterSkuOwnSpec(val) {
+                var spec = JSON.parse(val);
+                return "口味：" + spec.n10 + "<br>净含量：" + spec.n11 + "克<br>品质等级：" + spec.n12;
+            },
+            sum(price, count) {
+                return price * count;
+            },
+            handleSelectionChange(val) {
+                this.cartSelect = val;
+                this.cartNum = this.cartSelect.length;
+
+                this.cartSelect.forEach(cart => {
+                    this.cartSelctPrice += cart.count * cart.sku.skuPrice;
+                });
+            },
+            allSelect() {
+                for (let i = 0; i < this.goods.length; i++) {
+                    this.$refs.multipleTable.toggleRowSelection(i);
+                }
+            },
+            deleteCart(cart) {
+                if (cart == null) {
+                    let cart1 = {};
+                    cart1.userId = this.user.userId;
+                    $http.post("jw-cart/delete", { cart: cart1 }).then((response) => {
+                        this.getCart(this.user.userId);
+                    })
+                } else {
+                    $http.post("jw-cart/delete", { cart: cart }).then((response) => {
+                        this.getCart(this.user.userId);
+                    })
+                }
             }
         },
         filters: {
-            filterSubTitle(val) {
-                let len = 15;
-                if (val.length > len) {
-                    let v = val.substring(0, len);
-                    return v + "...";
+            skuPriceFilter(val) {
+                if (val == 0) {
+                    return 0;
                 }
-                return val;
+                let priceStr = val.toString();
+                return priceStr.slice(0, priceStr.length - 2) + "." + priceStr.slice(priceStr.length - 2) + "元";
             }
         }
     })

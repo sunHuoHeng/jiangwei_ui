@@ -6,3 +6,52 @@
     font-size: 17px;
     font-weight: 600;
 }
+/*结算窗口开始*/
+.balance{
+	height: 50px;
+	
+	border: 1px solid gray;
+	margin-top: 30px;
+    font-size: 16px;
+}
+
+.balance_ul1 li{
+	font-size: 14px;color:rgb(117, 117, 119);
+}
+.balance_ul1 li,.balance_ul2 li{
+	float: left;
+	line-height: 50px;
+	margin-left: 14px;
+	
+}
+.balance_ul1 li:hover{
+	color: #C91623;
+}
+
+.balance_ul2{
+	float: right;
+
+}
+
+.butt{
+
+	width: 110px;
+	height: 50px;
+	background-color: #e2e1e1;
+	
+	border: 0px;
+	font-size: 20px;
+	font-weight: bold;
+	color: #473f3f;
+    text-align: center;
+}
+.butt:hover{
+    color: #fff;
+    background-color: #C91623;
+}
+.balance_ul2 span{
+	font-size:20px ;
+	font-weight: bold;
+	color: #C91623;
+}
+/*结算窗口结束*/

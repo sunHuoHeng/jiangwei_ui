@@ -24,7 +24,7 @@
 <body>
     <div id="app">
         <!-- 顶部快捷导航栏start -->
-        <jiangwei-top></jiangwei-top>
+        <jiangwei-top :user="user"></jiangwei-top>
         <!-- 顶部快捷导航栏end -->
         <!-- header制作start -->
         <jiangwei-header @func="search"></jiangwei-header>
@@ -50,14 +50,13 @@
                             <span>{{good.spuTitle}}</span>
                         </div>
                         <div>
-                            <span 
-                                style="font-size: 12px;"
-                            >{{good.spuSubTitle | filterSubTitle}}</span>
+                            <span style="font-size: 12px;">{{good.spuSubTitle | filterSubTitle}}</span>
                         </div>
                         <div>
                             <span class="price">
                                 <img src="./fonts/金额.svg" width="18px" alt="">
-                                <label style="margin: 0px 0px;">{{good.minPrice == null ? 0 : good.minPrice / 100}}</label>
+                                <label style="margin: 0px 0px;">{{good.minPrice == null ? 0 : good.minPrice /
+                                    100}}</label>
                                 <label style="font-size: 12px;">起</label>
                             </span>
                         </div>
@@ -101,12 +100,17 @@
             // 根据tabId判断显示那个页面
             tabId: "0",
             tabClass: [],
-            searchWord:'',
+            searchWord: '',
             goods: [
 
-            ]
+            ],
+            user:{}
         },
         created() {
+            var user = JSON.parse(sessionStorage.getItem("user"));
+            if (null != user) {
+                this.user = user;
+            }
             this.initTags();
             this.tabClass[0].name = "爆款热卖";
             this.tabClass[1].name = "分类";
@@ -120,7 +124,7 @@
                 let _this = this;
                 var data = {};
                 data.searchText = "";
-                $http.post("jw-spu/es/list",data).then((response) => {
+                $http.post("jw-spu/es/list", data).then((response) => {
                     _this.goods = response.data.result;
                 });
             },
@@ -141,24 +145,25 @@
                 this.tabId = index;
                 this.tabClass[this.tabId].flag = true;
             },
-            spuDetail(spuId){
+            spuDetail(spuId) {
                 window.location = 'item.html?id=' + encodeURI(spuId);
             },
-            search(data){
+            search(data) {
                 this.searchWord = data;
-                window.location = 'showList.html?search='+encodeURI(data);
+                window.location = 'showList.html?search=' + encodeURI(data);
             }
         },
         filters: {
-            filterSubTitle(val){
+            filterSubTitle(val) {
                 let len = 12;
                 if (val.length > len) {
-                    let v = val.substring(0,len);
-                    return v + "..."; 
+                    let v = val.substring(0, len);
+                    return v + "...";
                 }
                 return val;
             }
         }
     })
 </script>
+
 </html>

@@ -13,9 +13,3 @@ _static.getUrlParam = function getQueryVariable(variable) {
         }
         return (false);
 }
-_static.checkLogin = function checkLogin() {
-        if (sessionStorage.getItem('user') == null) {
-                return false;
-        };
-        return true;
-}

@@ -31,20 +31,20 @@
             <div class="login_w">
                 <div class="form">
                     <div class="top">
-                        <a href="#" class="one">账户登录</a>
+                        <a href="#" class="one">疆味账户登录</a>
                     </div>
                     <div class="middle">
                         <div class="inputs">
                             <div>
                                 <i class="el-icon-user"></i>
-                                <input type="text" class="public user" v-model = "username">
+                                <input type="text" class="public user" v-model="username">
                             </div>
                             <div>
                                 <i class="el-icon-lock"></i>
-                                <input type="password" class="public pwd" v-model = "password">
+                                <input type="password" class="public pwd" v-model="password">
                             </div>
                             <a href="#">忘记密码</a>
-                            <input type="button" class="btn" value="登录">
+                            <input type="button" class="btn" value="登录" @click="login">
                         </div>
                     </div>
                     <div class="bottom">
@@ -72,6 +72,24 @@
         created() {
         },
         methods: {
+            login() {
+                let data = {};
+                data.user = this.username;
+                data.password = this.password;
+                data.type = 2;
+                $http.post("user/login", data).then((response) => {
+                    let code = response.data.code;
+                    if (code == 200) {
+                        let userObj = response.data.message;
+                        sessionStorage.setItem("user", userObj);
+                        window.location = 'index.html';
+
+                    } else {
+                        this.$message.error(response.data.message);
+                    }
+                });
+
+            },
         },
         filters: {
         }
