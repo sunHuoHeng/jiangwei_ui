@@ -1,57 +1,136 @@
-#cartTitle{
-    height: 40px;
-    background-color: #c5464a;
-    line-height: 40px;
-    padding-left: 10px;
-    font-size: 17px;
-    font-weight: 600;
-}
-/*结算窗口开始*/
-.balance{
-	height: 50px;
-	
-	border: 1px solid gray;
-	margin-top: 30px;
-    font-size: 16px;
+#payedTitle,
+#cartTitle {
+	height: 40px;
+	background-color: #c5464a;
+	line-height: 40px;
+	padding-left: 10px;
+	font-size: 17px;
+	font-weight: 600;
+	margin-top: 20px;
 }
 
-.balance_ul1 li{
-	font-size: 14px;color:rgb(117, 117, 119);
+#addressTitle {
+	height: 40px;
+	background-color: #f3c324;
+	line-height: 40px;
+	padding-left: 10px;
+	font-size: 17px;
+	font-weight: 600;
 }
-.balance_ul1 li,.balance_ul2 li{
+
+#waitPayTitle {
+	height: 40px;
+	background-color: #8e8d91;
+	line-height: 40px;
+	padding-left: 10px;
+	font-size: 17px;
+	font-weight: 600;
+}
+
+/*结算窗口开始*/
+.balance {
+	height: 50px;
+
+	border: 1px solid gray;
+	margin-top: 30px;
+	font-size: 16px;
+}
+
+.balance_ul1 li {
+	font-size: 14px;
+	color: rgb(117, 117, 119);
+}
+
+.balance_ul1 li,
+.balance_ul2 li {
 	float: left;
 	line-height: 50px;
 	margin-left: 14px;
-	
+
 }
-.balance_ul1 li:hover{
+
+.balance_ul1 li:hover {
 	color: #C91623;
 }
 
-.balance_ul2{
+.balance_ul2 {
 	float: right;
 
 }
 
-.butt{
+.butt {
 
 	width: 110px;
 	height: 50px;
 	background-color: #e2e1e1;
-	
+
 	border: 0px;
 	font-size: 20px;
 	font-weight: bold;
 	color: #473f3f;
-    text-align: center;
+	text-align: center;
 }
-.butt:hover{
-    color: #fff;
-    background-color: #C91623;
+
+.butt:hover {
+	color: #fff;
+	background-color: #C91623;
 }
-.balance_ul2 span{
-	font-size:20px ;
+
+.balance_ul2 span {
+	font-size: 20px;
 	font-weight: bold;
 	color: #C91623;
 }
+
 /*结算窗口结束*/
+.grid-content {
+	height: 100px;
+	border: #d7d7d8 3px solid;
+	margin: 10px 0px;
+	padding: 5px 3px;
+	word-wrap: break-word;
+	word-break: break-all;
+	overflow: hidden;
+}
+
+.mainAddInfo {
+	font-size: 18px;
+	font-weight: 600;
+	color: #C91623;
+	display: block;
+	box-shadow: rgba(138, 137, 137, 0.3) 0 1px;
+	padding-bottom: 4px;
+}
+
+.addDetail {
+	font-size: 16px;
+	font-weight: 400;
+	margin-top: 10px;
+}
+
+.select {
+	position: relative;
+	background-color: #fff;
+	border:3px solid #C91623;
+}
+.select:before {
+	content: '';
+	position: absolute;
+	right: 1px;
+	bottom: 0px;
+	border: 18px solid #C91623;
+	border-top-color: transparent;
+	border-left-color: transparent;
+}
+.select:after {
+	content: '';
+	width: 8px;
+	height: 19px;
+	position: absolute;
+	right: 5px;
+	bottom: 5px;
+	border: 2px solid #fff;
+	border-top-color: transparent;
+	border-left-color: transparent;
+	transform: rotate(45deg);
+}

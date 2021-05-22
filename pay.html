@@ -34,8 +34,26 @@
         <!-- header制作end -->
         <!-- nav制作start -->
         <div class="nav w">
-            <div id="cartTitle">
-                <span>购物车/全部商品</span>
+            <!-- 地址选择部分开始 -->
+            <div id="addressTitle">
+                <span>地址选择</span>
+            </div>
+            <div>
+                <el-row :gutter="24">
+                    <el-col :span="6">
+                        <div :class="getAddressClass(selctAddressClassIndex,0)" v-for="(item,i) in addressList" :key="i"
+                            @click="selctAddressClassIndex = i">
+                            <span class="mainAddInfo">{{item.consigneeName}}&nbsp;{{item.consigneePhone}}</span>
+                            <div class="addDetail">
+                                {{item.consigneeAddress}}
+                            </div>
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
+            <!-- 地址选择部分结束 -->
+            <div id="waitPayTitle">
+                <span>代支付商品</span>
             </div>
             <el-table ref="multipleTable" :data="goods" tooltip-effect="dark" style="width: 100%"
                 @selection-change="handleSelectionChange">
@@ -69,24 +87,77 @@
                             v-text="$options.filters.skuPriceFilter(sum(scope.row.sku.skuPrice,scope.row.count))"></span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="150" style="color: #ff0000;">
+                <el-table-column label="状态" width="150">
                     <template slot-scope="scope">
-                        <el-button type="info" icon="el-icon-delete" @click="deleteCart(scope.row)"></el-button>
+                        <span style="color: #ff0000;">待支付</span>
                     </template>
                 </el-table-column>
             </el-table>
             <!--结算窗口开始-->
             <div class="balance">
-                <ul class="balance_ul1">
-                    <li @click="deleteCart()">清空购物车</li>
-                </ul>
                 <ul class="balance_ul2">
                     <li>已经选择<span>{{cartNum}}</span>件商品</li>
                     <li>总价<span>￥{{cartSelctPrice | skuPriceFilter}}</span></li>
-                    <li class="butt" @click="settlement">去结算</li>
+                    <li class="butt" v-popover:popover>去支付</li>
+                    <el-popover ref="popover" placement="top" width="160" v-model="visible">
+                        <p>测试支付</p>
+                        <div style="text-align: right; margin: 0">
+                            <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+                            <el-button type="primary" size="mini" @click="buy()">确定</el-button>
+                        </div>
+                    </el-popover>
                 </ul>
             </div>
             <!--结算窗口结束-->
+            <div id="payedTitle">
+                <span>已支付商品</span>
+            </div>
+            <el-table ref="multipleTable" :data="orders" tooltip-effect="dark" style="width: 100%"
+                @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="50">
+                </el-table-column>
+                <el-table-column label="商品图片" width="150">
+                    <template slot-scope="scope">
+                        <img :src="scope.row.sku.skuImages" alt="" style="width: 100px;height: 100px;">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="spu.spuTitle" label="商品名称" width="120">
+                </el-table-column>
+                <el-table-column label="商品规格" width="120">
+                    <template slot-scope="scope">
+                        <span style="font-size: 12px;" v-html="filterSkuOwnSpec(scope.row.sku.skuOwnSpec)"></span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="单价" width="120">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.sku.skuPrice | skuPriceFilter}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="数量" width="120">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.buyNum}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="小计" width="120">
+                    <template slot-scope="scope">
+                        <span
+                            v-text="$options.filters.skuPriceFilter(sum(scope.row.sku.skuPrice,scope.row.buyNum))"></span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="状态" width="150">
+                    <template slot-scope="scope">
+                        <span style="color: #ff0000;">{{scope.row.status | statusFilter}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="120">
+                    <template slot-scope="scope">
+                        <div>
+                            <el-button mini v-if="scope.row.status == 1" @click="orderStatus(scope.row.orderId,4)">退货</el-button>
+                            <el-button mini v-if="scope.row.status == 2" @click="orderStatus(scope.row.orderId,3)">确认收货</el-button>
+                        </div>
+                    </template>
+                </el-table-column>
+            </el-table>
         </div>
         <!-- nav制作end -->
 
@@ -102,11 +173,15 @@
             // 引入全局变量
             goods: [
             ],
+            orders:[],
+            addressList: [],
             searchWord: '',
             user: {},
             cartSelect: [],
             cartNum: 0,
-            cartSelctPrice: 0
+            cartSelctPrice: 0,
+            selctAddressClassIndex: 0,
+            visible:false
         },
         created() {
             var user = JSON.parse(sessionStorage.getItem("user"));
@@ -116,11 +191,23 @@
                 window.location = 'login.html';
             }
             this.getCart(user.userId);
+            this.getAddress(user.userId);
+            this.getPayed(user.userId);
         },
         methods: {
             getCart(id) {
-                $http.post("jw-cart/list", { userId: id ,status:0}).then((response) => {
+                $http.post("jw-cart/list", { userId: id, status: 1 }).then((response) => {
                     this.goods = response.data.result;
+                })
+            },
+            getPayed(id){
+                $http.post("jw-order/list", { userId: id}).then((response) => {
+                    this.orders = response.data.result;
+                })
+            },
+            getAddress(id) {
+                $http.post("jw-address/list", { userId: id }).then((response) => {
+                    this.addressList = response.data.result;
                 })
             },
             search(data) {
@@ -162,13 +249,29 @@
                     })
                 }
             },
-            settlement() {
-                if (this.cartSelect.length == 0) {
-                    this.$message.error("未选择商品，无法结算！");
-                    return;
+            getAddressClass(index, i) {
+                if (index == i) {
+                    return "grid-content select";
                 }
-                $http.post("jw-cart/status", { cartSelect: this.cartSelect ,status:1}).then((response) => {
-                    window.location = "pay.html";
+                else {
+                    return "grid-content";
+                }
+            },
+            buy() {
+                let data = {};
+                data.cartSelect = this.cartSelect;
+                data.address = this.addressList[this.selctAddressClassIndex];
+                data.userId = this.user.userId;
+                $http.post("jw-order/add", data).then((response) => {
+                    this.visible = false;
+                    this.getCart(this.user.userId);
+                    this.getPayed(this.user.userId);
+                })
+            },
+            orderStatus(orderId,status){
+
+                $http.post("jw-order/status", {orderId:orderId,status:status}).then((response) => {
+                    this.getPayed(this.user.userId);
                 })
             }
         },
@@ -179,6 +282,26 @@
                 }
                 let priceStr = val.toString();
                 return priceStr.slice(0, priceStr.length - 2) + "." + priceStr.slice(priceStr.length - 2) + "元";
+            },
+            statusFilter(val){
+                if (0 == val) {
+                    return "未支付";
+                }
+                if (1 == val) {
+                    return "已支付，待发货";
+                }
+                if (2 == val) {
+                    return "已发货";
+                }
+                if (3 == val) {
+                    return "已收货";
+                }
+                if (4 == val) {
+                    return "退货待处理";
+                }
+                if (5 == val) {
+                    return "已退货";
+                }
             }
         }
     })

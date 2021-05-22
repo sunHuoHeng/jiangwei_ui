@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>疆味 - 搬运最地道的新疆味道！</title>
+    <meta name="description"
+        content="疆味有限责任公司致力利用现代科技与传统农业种植相结合,通过采用原产地—线上订购—线下体验店—消费者的方式,打造上联生产、中联平台、下联市场的新零售模式，让消费者可以在线上平台提供的商品里面挑选最合适的商品。" />
+    <meta name="keywords" content="疆味,新疆味道,水果,干果,葡萄,哈密瓜">
+    <!-- 引入图标 -->
+    <link rel="shortcut icon" href="jiangwei.ico">
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./element/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/login.css">
+    <link rel="stylesheet" href="./css/register.css">
+    <link rel="stylesheet" href="./fonts/fbs/css/all.min.css">
+    <script src="./fonts/fbs/js/all.min.js"></script>
+    <script src="./js/vue.js"></script>
+    <script src="./element/element-ui/lib/index.js"></script>
+    <script src="./js/jquery.min.js"></script>
+    <script src="./distpicker/dist/distpicker.js"></script>
+    <script src="./js/axios.min.js"></script>
+    <script src="./js/public/top.js"></script>
+    <script src="./js/public/header.js"></script>
+    <script src="./js/public/footer.js"></script>
+    <script src="./js/util/static.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="nav">
+            <div class="register_main">
+                <div class="res_title">注册页面</div>
+                <div class="reg_item">
+                    <span>用户名</span>
+                    <el-input v-model="username"></el-input>
+                </div>
+                <div class="reg_item">
+                    <span>设置用户密码</span>
+                    <el-input type="password" v-model="pass"></el-input>
+                </div>
+                <div class="reg_item">
+                    <span>重复用户密码</span>
+                    <el-input type="password" v-model="rePass"></el-input>
+                </div>
+                <div class="reg_item">
+                    <span>默认电话号码</span>
+                    <el-input v-model="phoneNum"></el-input>
+                </div>
+                <div class="reg_item">
+                    <span>默认收货人姓名</span>
+                    <el-input v-model="consigneeName"></el-input>
+                </div>
+                <div class="reg_item">
+                    <span>设置默认收货地址</span>
+                    <div data-toggle="distpicker">
+                        <select data-province="---- 选择省 ----" v-model="selectedSheng"></select>
+                        <select data-city="---- 选择市 ----" v-model="selectedShi"></select>
+                        <select data-district="---- 选择区 ----" v-model="selectedQu"></select>
+                        <span>详细地址：</span>
+                        <textarea v-model="addDetail" cols="50" rows="5" style="font-size: 20px;margin-bottom: 20px;"></textarea>
+                    </div>
+                </div>
+                <div class="zhuce"> 
+                    <el-button @click="register">注册</el-button>
+                </div>
+            </div>
+        </div>
+        <!--主体结束-->
+    </div>
+</body>
+<script>
+    $('#target').distpicker({
+        province: '---- 所在省 ----',
+        city: '---- 所在市 ----',
+        district: '---- 所在区 ----'
+    });
+    var app = new Vue({
+        el: '#app',
+        data: {
+            username: "",
+            pass: "",
+            rePass:"",
+            selectedSheng: "",
+            selectedShi: "",
+            selectedQu: "",
+            phoneNum: "",
+            consigneeName:"",
+            addDetail: ""
+        },
+        created() {
+        },
+        methods: {
+            register() {
+                if (this.pass != this.rePass) {
+                    this.$message.error("两次输入密码不同！");
+                    return;
+                }
+                let data = {};
+                data.username = this.username;
+                data.password = this.pass;
+                data.phoneNum = this.phoneNum;
+                data.type = 2;
+                data.consigneeName = this.consigneeName;
+                data.address = this.selectedSheng+this.selectedShi+this.selectedQu + this.addDetail;
+                $http.post("user/register", data).then((response) => {
+                    let code = response.data.code;
+                    if (code == 200) {
+                        window.location = 'login.html';
+                    } else {
+                        this.$message.error(response.data.message);
+                    }
+                });
+
+            },
+        },
+        filters: {
+        }
+    })
+</script>
+
+</html>

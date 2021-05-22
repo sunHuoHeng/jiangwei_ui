@@ -99,14 +99,8 @@
                         </div>
                         <div>
                             <el-button mini @click="addToCart" type="warning">加入购物车</el-button>
-                            <el-button mini v-popover:popover type="warning">直接购买</el-button>
-                            <el-popover ref="popover" placement="top" width="160" v-model="visible">
-                                <p>测试支付</p>
-                                <div style="text-align: right; margin: 0">
-                                    <el-button size="mini" type="text" @click="visible = false">取消</el-button>
-                                    <el-button type="primary" size="mini" @click="buy()">确定</el-button>
-                                </div>
-                            </el-popover>
+                            <el-button mini type="warning" @click="toBuy">直接购买</el-button>
+                            
                         </div>
                     </div>
                 </div>
@@ -240,8 +234,24 @@
                 $http.post("jw-cart/add", data).then((response) => {
                     this.$message.success("加入购物车成功！");
                 }).catch((response) => {
-                    this.$message.error("加入购物车失败，购物车已存在同种商品！");
+                    this.$message.error("加入购物车失败，购物车或待支付中已存在同种商品！");
                 });
+            },
+            toBuy(){
+                var data = {};
+                data.userId = this.user.userId;
+                data.spu = this.spu;
+                data.sku = this.sku;
+                data.count = this.num;
+                $http.post("jw-cart/add", data).then((response) => {
+                    $http.post("jw-cart/status", { userId: this.user.userId, skuId:data.sku.skuId,status:1}).then((response) => {
+                    window.location = "pay.html";
+                })
+                }).catch((response) => {
+                    this.$message.error("加入购物车失败，购物车或待支付中已存在同种商品！");
+                });
+                
+
             }
         },
         filters: {

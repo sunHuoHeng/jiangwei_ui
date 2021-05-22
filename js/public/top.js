@@ -16,7 +16,7 @@ const jiangweiTop = `
                 </div>
                 <div class="fr">
                     <ul class="shortcut-li">
-                        <li><a href="#">我的订单</a></li>
+                        <li><a href="pay.html">我的订单</a></li>
                         <li class="space-line">|</li>
                         <li><a href="#">我的收藏</a></li>
                         <li class="space-line">|</li>
